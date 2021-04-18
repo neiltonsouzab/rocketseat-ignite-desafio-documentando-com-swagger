@@ -1,0 +1,200 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Atlas",
+    "description": "Essa é uma documentação sobre a Atlas API",
+    "version": "1.0.0"
+  },
+  "tags": [{
+    "name": "users",
+    "description": "Gerenciamento de usuários"
+  }],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Cria um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "Rocketseat",
+                  "description": "oi@rocketseat.com.br"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Operação realizada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "id": "049aba8c-5ef3-4fdc-a7e4-17092ff37de8",
+                    "name": "Mary Jane",
+                    "email": "mary@example.com",
+                    "admin": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email já está sendo utilizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "error": "This email is already in use."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["users"],
+        "summary": "Retorna todos os usuários.",
+        "description": "Somente usuário <code>admin</code> pode acessar.",
+        "parameters": [{
+          "in": "header",
+          "name": "user_id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": [
+                    {
+                      "id": "049aba8c-5ef3-4fdc-a7e4-17092ff37de8",
+                      "name": "Mary Jane",
+                      "email": "mary@example.com",
+                      "admin": false
+                    },
+                    {
+                      "id": "04930fia-0fk2-8cdf-k2l1-17092ff37bc2",
+                      "name": "John Doe",
+                      "email": "john@example.com",
+                      "admin": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuário sem permissão ou Usuário não encontrado.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "You need to be an administrator to list all users."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Retorna um usuário específico.",
+        "parameters": [{
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "049aba8c-5ef3-4fdc-a7e4-17092ff37de8",
+                  "name": "Mary Jane",
+                  "email": "mary@example.com",
+                  "admin": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuário não encontrado.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "User not found."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "Torna admin um usuário",
+        "parameters": [{
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "049aba8c-5ef3-4fdc-a7e4-17092ff37de8",
+                  "name": "Mary Jane",
+                  "email": "mary@example.com",
+                  "admin": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "User not found."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
